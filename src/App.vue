@@ -1,9 +1,16 @@
 <template>
   <v-app>
-    <app-header v-if="isAuthenticated" @logout="logout" />
-    <app-sidebar v-if="isAuthenticated" v-model:drawer="drawer" />
-    
-    <v-main>
+    <v-layout v-if="isAuthenticated">
+      <app-sidebar v-model:drawer="drawer" />
+      <v-main>
+        <!-- Header placé ici, au-dessus du contenu -->
+        <app-header @logout="logout" />
+        <v-container fluid class="pa-6">
+          <router-view />
+        </v-container>
+      </v-main>
+    </v-layout>
+    <v-main v-else>
       <v-container fluid>
         <router-view />
       </v-container>
@@ -50,7 +57,6 @@ const fetchAllData = async () => {
 
 // Watch for route changes
 watch(route, () => {
-  // Close the drawer on mobile when route changes
   if (window.innerWidth < 960) {
     drawer.value = false;
   }
@@ -70,4 +76,17 @@ onMounted(async () => {
 .v-data-table img {
   object-fit: contain;
 }
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+.v-main {
+  overflow-y: auto;
+  padding-top: 64px; /* header height */
+}
+
 </style>
